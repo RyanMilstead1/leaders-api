@@ -1,4 +1,10 @@
 LeadersApi::Application.routes.draw do
+  namespace :v1, defaults: {format: 'json'} do
+    resources :states do
+      resources :leaders
+    end
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -55,4 +61,6 @@ LeadersApi::Application.routes.draw do
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id))(.:format)'
+
+  mount_browsercms
 end

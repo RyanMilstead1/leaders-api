@@ -7,6 +7,7 @@ gem 'rails', '3.2.6'
 
 gem 'pg'
 
+gem "friendly_id", "~> 4.0.1"
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -22,6 +23,16 @@ end
 
 gem 'jquery-rails'
 
+group :test, :development do
+  gem 'rspec-rails', '2.8.1'
+  gem 'capybara', '1.1.2'
+  gem 'guard-rspec'
+  gem 'guard-spork'
+  gem 'database_cleaner', "~> 0.7.2"
+  gem 'factory_girl_rails', "~> 3.0"
+  gem 'delorean'
+end
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
@@ -29,10 +40,12 @@ gem 'jquery-rails'
 # gem 'jbuilder'
 
 # Use unicorn as the app server
-# gem 'unicorn'
+gem 'unicorn'
 
 # Deploy with Capistrano
-# gem 'capistrano'
+gem 'capistrano'
 
 # To use debugger
 # gem 'debugger'
+
+gem "browsercms", "3.5.4"
