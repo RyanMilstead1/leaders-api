@@ -55,6 +55,7 @@ describe KnowWhoImporter do
       state = FactoryGirl.create(:state, code: "TX")
       leader1 = FactoryGirl.create(:leader, person_id: "1234567", state: state)
       leader2 = KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX"})
+      leader2.publish!
       leader2.id.should == leader1.id
     end
 
@@ -64,13 +65,27 @@ describe KnowWhoImporter do
       leader.state.code.should == "TX"
     end
 
-    it "updates attributes of existing leader" do
-      state = FactoryGirl.create(:state, code: "TX")
-      leader = FactoryGirl.create(:leader, state: state, person_id: "1234567", marital_status: "single")
-      KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX", marital: "married"})
-      leader.reload.marital_status.should == "married"
+    it "sets attributes of new leader and publishes" do
+      FactoryGirl.create(:state, code: "TX")
+      KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX", marital: "single"})
+      Leader.find_by_person_id("1234567").marital_status.should == "single"
     end
-    
+
+    it "updates attributes of existing leader but does not publish" do
+      FactoryGirl.create(:state, code: "TX")
+      KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX", marital: "single"})
+      KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX", marital: "married"})
+      Leader.find_by_person_id("1234567").marital_status.should == "single"
+    end
+
+    it "updates attributes of existing leader but does not publish" do
+      FactoryGirl.create(:state, code: "TX")
+      KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX", marital: "single"})
+      KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX", marital: "married"})
+      Leader.find_by_person_id("1234567").publish!
+      Leader.find_by_person_id("1234567").marital_status.should == "married"
+    end
+
     it "does not throw error if leader has same state" do
       state = FactoryGirl.create(:state, code: "TX")
       leader = FactoryGirl.create(:leader, person_id: "1234567", state: state)

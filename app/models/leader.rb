@@ -1,8 +1,7 @@
 class Leader < ActiveRecord::Base
+  acts_as_content_block
   # attr_accessible :title, :body
   belongs_to :state
-  extend FriendlyId                                                                                                             
-  friendly_id :prefix_name, use: :slugged
 
   attr_protected :person_id
 
@@ -12,6 +11,12 @@ class Leader < ActiveRecord::Base
   scope :us,            where(legislator_type: "FL").order(:last_name)
   scope :us_house,      where(legislator_type: "FL", chamber: "H").order(:last_name)
   scope :us_senate,     where(legislator_type: "FL", chamber: "S").order(:last_name)
+
+  before_create :generate_slug
+
+  def state_code
+    self.state.code.downcase
+  end
 
   def name
     "#{nick_name} #{last_name}"
@@ -28,13 +33,26 @@ class Leader < ActiveRecord::Base
   def photo_src
     return "http://placehold.it/109x148" if photo_path.blank? or photo_file.blank?
     path = photo_path.split("\\")
-    #return "/assets/no_photo.gif" if path.blank? or photo_file.blank?
-    "/#{path[1].downcase}/#{path[2]}/#{path[3]}/#{path[4]}/#{photo_file}"
+    "#{PSP_BASE_URI}/#{path[1].downcase}/#{path[2]}/#{path[3]}/#{path[4]}/#{photo_file}"
+  end
+
+  def json_url
+    "#{API_BASE_URI}/states/#{self.state.code.downcase}/leaders/#{slug}"
   end
 
   def birthday
     if born_on
       born_on.strftime("#B %e")
+    end
+  end
+
+  def generate_slug
+    tmp_slug = prefix_name.parameterize
+    count = Leader.where("slug = ? or slug LIKE ?", tmp_slug, "#{tmp_slug}--%").count
+    if count < 1
+      self.slug = tmp_slug
+    else
+      self.slug = "#{tmp_slug}--#{count + 1}"
     end
   end
 end

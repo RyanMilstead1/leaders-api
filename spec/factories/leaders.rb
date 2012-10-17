@@ -5,11 +5,21 @@ FactoryGirl.define do
     "Joe Congressman#{n}"
   end
 
+  sequence :slug do |n|
+    "joe-congressman--#{n}"
+  end
+
+  sequence :person_id do |n|
+    "1234567--#{n}"
+  end
+
   factory :leader do
     state
     first_name "Joe" 
     last_name "Shmoe"
     nick_name { generate(:leader_name) }
+    slug { generate(:slug) }
+    person_id { generate(:person_id) }
     photo_path 'Images\Photos\SL\IN\S'
     photo_file 'Landske_Dorothy_194409.jpg'
     

@@ -6,8 +6,8 @@ gem 'rails', '3.2.6'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'pg'
-
 gem "friendly_id", "~> 4.0.1"
+gem 'rabl'
 
 # Gems used only for assets and not required
 # in production environments by default.

@@ -1,7 +1,19 @@
 LeadersApi::Application.routes.draw do
+  namespace :cms  do content_blocks :leaders end
+
+  namespace :cms  do content_blocks :states end
+
   namespace :v1, defaults: {format: 'json'} do
+    resources :leaders
     resources :states do
-      resources :leaders
+      resources :leaders do
+        collection do
+          get 'us_senate'
+          get 'us_house'
+          get 'state_senate'
+          get 'state_house'
+        end
+      end
     end
   end
 

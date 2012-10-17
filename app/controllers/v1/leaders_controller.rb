@@ -2,15 +2,37 @@ module V1
   class LeadersController < ApplicationController
     respond_to :json
 
+    before_filter do
+      @state = State.find_by_code(params[:state_id].upcase) if params[:state_id]
+    end
+
     def index
-      @state = State.find_by_code(params[:state_id].upcase)
+      @leaders = @state.leaders
     end
 
     def show
-      @state = State.find_by_code(params[:state_id].upcase)
-      @leader = Leader.find(params[:id])
-      respond_with @leader
+      @leader = Leader.find_by_slug(params[:id])
+      @state = @leader.state
     end
 
+    def us_senate 
+      @leaders =  @state.leaders.us_senate
+      render 'index'
+    end
+
+    def us_house
+      @leaders = @state.leaders.us_house
+      render 'index'
+    end
+
+    def state_senate 
+      @leaders = @state.leaders.state_senate
+      render 'index'
+    end
+
+    def state_house
+      @leaders = @state.leaders.state_house
+      render 'index'
+    end
   end
 end
