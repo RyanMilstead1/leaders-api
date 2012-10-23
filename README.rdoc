@@ -1,4 +1,4 @@
-== Leaders API
+= Leaders API
 
 Serving up current congressional leaders for all 50 States on both the US and State level.
 
@@ -17,7 +17,7 @@ Serving up current congressional leaders for all 50 States on both the US and St
 
 /v1/states/tx/leaders
 
-Other chambers:
+=== Other chambers:
 
 /v1/states/tx/leaders/us_house
 
@@ -25,7 +25,7 @@ Other chambers:
 
 /v1/states/tx/leaders/state_house
 
-Individuals can be found via their slug:
+=== Individuals can be found via their slug:
 
 /v1/leaders/us-rep-ron-paul
 
