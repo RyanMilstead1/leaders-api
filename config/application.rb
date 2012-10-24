@@ -66,6 +66,6 @@ module LeadersApi
     config.assets.version = '1.0'
 
     # Work around this bug: https://github.com/browsermedia/browsercms/issues/553
-    config.assets.precompile += ["cms/*.css", "cms/*.js", "bcms/ckeditor.js"]
+    config.assets.precompile += ["*.js", "cms/*.css", "cms/*.js", "bcms/*.js"]
   end
 end
