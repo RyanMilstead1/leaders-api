@@ -11,6 +11,7 @@
 /public/assets
 
 /config/database.yml
+/config/initializers/know_who.rb
 
 *.swp
 

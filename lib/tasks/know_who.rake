@@ -3,7 +3,7 @@ require 'csv'
 namespace :know_who do
   task :download_latest_data do
     `mkdir -p know_who/raw`
-    `cd know_who/raw && wget ftp://ftp_capitolcomm:ktr84sbe@205.134.170.180/* `
+    `cd know_who/raw && wget #{ENV['KNOW_WHO_FTP_URL']}/*`
     #`cd know_who/raw && unzip \*.zip`
   end
 
