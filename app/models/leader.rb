@@ -32,11 +32,11 @@ class Leader < ActiveRecord::Base
 
   def photo_src
     return "http://placehold.it/109x148" if photo_path.blank? or photo_file.blank?
-    path = photo_path.split("\\")
-    "#{PSP_BASE_URI}/#{path[1].downcase}/#{path[2]}/#{path[3]}/#{path[4]}/#{photo_file}"
+    p = photo_path.split("\\")
+    "#{PSP_BASE_URI}/#{p[1].downcase}/#{p[2]}/#{p[3]}/#{p[4]}/#{photo_file}"
   end
 
-  def json_url
+  def href
     "#{API_BASE_URI}/states/#{self.state.code.downcase}/leaders/#{slug}"
   end
 

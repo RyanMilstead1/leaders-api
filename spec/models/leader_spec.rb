@@ -48,7 +48,7 @@ describe Leader do
 
   context "#photo_src" do
     it "returns path to photo" do
-      leader = Leader.new(photo_path: 'Images\Photos\SL\IN\S', 
+      leader = Leader.new(photo_path: 'Images\\Photos\\SL\\IN\\S', 
                           photo_file: 'Landske_Dorothy_194409.jpg')
       leader.photo_src.should == 
         'http://publicservantsprayer.org/photos/SL/IN/S/Landske_Dorothy_194409.jpg'
