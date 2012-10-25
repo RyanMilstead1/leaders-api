@@ -1,2 +1,18 @@
 object @leader
-attributes :id, :slug, :name, :title, :photo_src, :prefix_name, :json_url, :state_code, :born_on, :district, :residence, :spouse, :family
+attributes :slug, 
+           :name,
+           :title,
+           :href,
+           :photo_src,
+           :prefix_name,
+           :state_code,
+           :born_on,
+           :district,
+           :residence,
+           :spouse,
+           :family,
+           :website,
+           :email,
+           :twitter,
+           :facebook,
+           :webform
