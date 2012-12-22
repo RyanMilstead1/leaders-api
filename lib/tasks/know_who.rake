@@ -108,10 +108,13 @@ namespace :know_who do
   end
 
   task :copy_files => :environment do
+    state_path = "know_who/raw/State/government_1/"
+    fed_path = "know_who/raw/Federal/government_1/"
+
     puts "copying files"
-    `cp know_who/raw/State/States.csv know_who/states.csv`
-    `cp know_who/raw/State/Members.csv know_who/state_members.csv`
-    `cp know_who/raw/Federal/Members.csv know_who/federal_members.csv`
+    `cp #{state_path}States.csv know_who/states.csv`
+    `cp #{state_path}Members.csv know_who/state_members.csv`
+    `cp #{fed_path}Members.csv know_who/federal_members.csv`
   end
 
   task :iconv_files => :environment do

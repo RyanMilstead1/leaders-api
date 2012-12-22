@@ -49,10 +49,10 @@ class KnowWhoImporter
   def birthday
     unless @data[:birthyear].blank? or 
            @data[:birthmonth].blank? or 
-           @data[:birthday].blank?
-      Date.new(date[:birthyear].to_i, 
+           @data[:birthdate].blank?
+      Date.new(@data[:birthyear].to_i, 
                @data[:birthmonth].to_i, 
-               @data[:birthday].to_i)
+               @data[:birthdate].to_i)
     else
       nil
     end

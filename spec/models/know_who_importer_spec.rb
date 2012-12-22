@@ -71,6 +71,18 @@ describe KnowWhoImporter do
       Leader.find_by_person_id("1234567").marital_status.should == "single"
     end
 
+    it "sets born_on of new leader and publishes" do
+      FactoryGirl.create(:state, code: "TX")
+      KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX", birthyear: 1972, birthmonth: 9, birthdate: 15})
+      Leader.find_by_person_id("1234567").born_on.should == Date.new(1972, 9, 15)
+    end
+
+    it "skips born_on of new leader if no month or day" do
+      FactoryGirl.create(:state, code: "TX")
+      KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX", birthyear: 1972})
+      Leader.find_by_person_id("1234567").born_on.should == nil
+    end
+
     it "updates attributes of existing leader but does not publish" do
       FactoryGirl.create(:state, code: "TX")
       KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX", marital: "single"})
