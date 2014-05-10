@@ -1,7 +1,6 @@
 class CreateStates < ActiveRecord::Migration
   def change
-    Cms::ContentType.create!(:name => "State", :group_name => "Government")
-    create_content_table :states, :prefix=>false do |t|
+    create_table :states do |t|
       t.string :name
       t.string :code
       t.string :region

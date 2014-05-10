@@ -1,7 +1,6 @@
 class CreateLeaders < ActiveRecord::Migration
   def change
-    Cms::ContentType.create!(:name => "Leader", :group_name => "Government")
-    create_content_table :leaders, :prefix=>false do |t|
+    create_table :leaders do |t|
       t.belongs_to :state
 
       t.string :slug, null: false
@@ -64,7 +63,6 @@ class CreateLeaders < ActiveRecord::Migration
 
       t.timestamps
     end
-    change_column :leader_versions, :version_comment, :text
     add_index :leaders, :person_id, :unique => true
     add_index :leaders, :slug, :unique => true
   end
