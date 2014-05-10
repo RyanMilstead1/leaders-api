@@ -59,4 +59,24 @@ describe Leader do
       leader.photo_src.should eq('http://placehold.it/109x148')
     end
   end
+
+  context ".create_or_update" do
+    it "throws error if leader has new state" do
+      texas = FactoryGirl.create(:state, code: "TX")
+      california = FactoryGirl.create(:state, code: "CA")
+      leader = FactoryGirl.create(:leader, state: texas, person_id: "1234567")
+      lambda do
+        Leader.create_or_update({ pid: "1234567", statecode: "CA"})
+      end.should raise_error(
+        RuntimeError, "Know Who data tried to change leader state")
+    end
+
+    it "throws error if state not found" do
+      texas = FactoryGirl.create(:state, code: "TX")
+      leader = FactoryGirl.create(:leader, state: texas, person_id: "1234567")
+      lambda do
+        Leader.create_or_update({ pid: "1234567", statecode: "CA"})
+      end.should raise_error(RuntimeError, "Know Who data state not found")
+    end
+  end
 end

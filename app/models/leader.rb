@@ -14,6 +14,33 @@ class Leader < ActiveRecord::Base
 
   before_create :generate_slug
 
+  def self.create_or_update(data)
+    leader = Leader.find_by_person_id(data[:pid])
+    state = State.find_by_code(data[:statecode])
+    raise "Know Who data state not found" unless state
+    if leader
+      verify_same_state(leader, state)
+      update_attributes_from_know_who(leader, data)
+      leader.member_status = 'current'
+      # leader.save!
+      leader.publish!
+    else
+      leader = state.leaders.new
+      update_attributes_from_know_who(leader, data)
+      # FIXME: This should happen before_create, but browsercms is overriding
+      leader.generate_slug
+      leader.member_status = 'current'
+      leader.publish!
+    end
+    leader
+  end
+
+  def self.verify_same_state(leader, state)
+    unless leader.state and leader.state.code == state.code
+      raise "Know Who data tried to change leader state"
+    end
+  end
+
   def state_code
     self.state.code.downcase
   end
@@ -55,4 +82,76 @@ class Leader < ActiveRecord::Base
       self.slug = "#{tmp_slug}--#{count + 1}"
     end
   end
+
+  private
+
+  def self.update_attributes_from_know_who(leader, data)
+    leader.born_on = birthday(data)
+    leader.person_id = data[:pid]
+    leader.legislator_type = data[:legtype]
+    leader.title = data[:title]
+    leader.prefix = data[:prefix]
+    leader.first_name = data[:firstname]
+    leader.last_name = data[:lastname]
+    leader.mid_name = data[:midname]
+    leader.nick_name = data[:nickname]
+    leader.legal_name = data[:legalname]
+    leader.party_code = data[:partycode]
+    leader.district = data[:district]
+    leader.district_id = data[:districtid]
+    leader.family = data[:family]
+    leader.religion = data[:religion]
+    leader.email = data[:email]
+    leader.website = data[:website]
+    leader.webform = data[:webform]
+    leader.weblog = data[:weblog]
+    leader.blog = data[:weblog]
+    leader.facebook = data[:facebook]
+    leader.twitter = data[:twitter]
+    leader.youtube = data[:youtube]
+    leader.photo_path = data[:photopath]
+    leader.photo_file = data[:photofile]
+    leader.chamber = data[:chamber]
+    leader.gender = data[:gender]
+    leader.party_code = data[:partycode]
+    leader.birth_place = data[:birthplace]
+    leader.spouse = data[:spouse]
+    leader.marital_status = data[:marital]
+    leader.residence = data[:residence]
+    leader.school_1_name = data[:school1]
+    leader.school_1_date = data[:edudate1]
+    leader.school_1_degree = data[:degree1]
+    leader.school_2_name = data[:school2]
+    leader.school_2_date = data[:edudate2]
+    leader.school_2_degree = data[:degree2]
+    leader.school_3_name = data[:school3]
+    leader.school_3_date = data[:edudate3]
+    leader.school_3_degree = data[:degree3]
+    leader.military_1_branch = data[:milbranch1]
+    leader.military_1_rank = data[:milrank1]
+    leader.military_1_dates = data[:mildates1]
+    leader.military_2_branch = data[:milbranch2]
+    leader.military_2_rank = data[:milrank2]
+    leader.military_2_dates = data[:mildates2]
+    leader.mail_name = data[:mailname]
+    leader.mail_title = data[:mailtitle]
+    leader.mail_address_1 = data[:mailaddr1]
+    leader.mail_address_2 = data[:mailaddr2]
+    leader.mail_address_3 = data[:mailaddr3]
+    leader.mail_address_4 = data[:mailaddr4]
+    leader.mail_address_5 = data[:mailaddr5]
+  end
+
+  def self.birthday(data)
+    unless data[:birthyear].blank? or 
+           data[:birthmonth].blank? or 
+           data[:birthdate].blank?
+      Date.new(data[:birthyear].to_i, 
+               data[:birthmonth].to_i, 
+               data[:birthdate].to_i)
+    else
+      nil
+    end
+  end
+
 end

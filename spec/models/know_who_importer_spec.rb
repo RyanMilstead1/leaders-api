@@ -10,117 +10,119 @@ describe KnowWhoImporter do
     Leader.delete_all
   end
 
-  it "sets state on initilization" do
-    FactoryGirl.create(:state, code: "TX")
-    import = KnowWhoImporter.new(know_who_data)
-    import.state.code.should == "TX"
+  let!(:texas) { FactoryGirl.create(:state, code: "TX") }
+
+  let(:importer) { KnowWhoImporter.new }
+
+  context "#begin_import" do
+    it "set all leaders to pending" do
+      10.times { FactoryGirl.create(:leader) }
+      importer.begin_import
+
+      Leader.where({member_status: 'pending'}).count.should == 10
+    end
   end
 
-  context "#leader_exists?" do
-    it "returns true if leader exists" do
-      texas = FactoryGirl.create(:state, code: "TX")
-      FactoryGirl.create(:leader, person_id: "123", state: texas)
-      import = KnowWhoImporter.new({ pid: "123", statecode: texas.code})
-      import.leader_exists?.should == true 
-    end
+  context "#finish_import" do
+    xit "sets all 'pending' leaders to 'former'" do
+      leader1 = FactoryGirl.create(:leader, person_id: '1')
+      leader2 = FactoryGirl.create(:leader, person_id: '2')
+      leader3 = FactoryGirl.create(:leader, person_id: '3')
+      importer.begin_import
+      importer.import_leader(pid: '1', statecode: 'TX')
+      importer.import_leader(pid: '2', statecode: 'TX')
+      importer.import_leader(pid: '999', statecode: 'TX')
+      importer.finish_import
 
-    it "returns false if leader does not exist" do
-      texas = FactoryGirl.create(:state, code: "TX")
-      FactoryGirl.create(:leader, person_id: "123", state: texas)
-      import = KnowWhoImporter.new({ pid: "456", statecode: texas.code})
-      import.leader_exists?.should == false
+      puts Leader.all.map {|l| [l.person_id, l.member_status]}
+      Leader.count.should == 4
+      Leader.where({member_status: 'former'}).count.should == 1
     end
   end
 
   context "#create_or_update(know_who_data)" do
-    before do
-      State.delete_all
-      Leader.delete_all
-    end
-
     it "returns leader" do
-      state = FactoryGirl.create(:state, code: "TX")
-      leader = KnowWhoImporter.create_or_update(know_who_data)
+      leader = KnowWhoImporter.new.create_or_update(know_who_data)
+
       leader.should be_an_instance_of(Leader)
     end
 
-    it "creates new leader if not yet created" do
-      state = FactoryGirl.create(:state, code: "TX")
-      leader1 = FactoryGirl.create(:leader, state: state, person_id: "00001")
-      leader2 = KnowWhoImporter.create_or_update(know_who_data)
-      leader2.id.should_not == leader1.id
+    context "with a new leader" do
+      it "creates new leader if not yet created" do
+        leader1 = FactoryGirl.create(:leader, state: texas, person_id: "00001")
+        leader2 = KnowWhoImporter.new.create_or_update(know_who_data)
+
+        leader2.id.should_not == leader1.id
+      end
+
+      it "attaches new leader to state" do
+        leader = KnowWhoImporter.new.create_or_update(know_who_data)
+
+        leader.state.code.should == "TX"
+      end
+
+      it "sets member_status to 'current'" do
+        leader = KnowWhoImporter.new.create_or_update(know_who_data)
+
+        leader.member_status.should == "current"
+      end
     end
 
-    it "finds existing leader if created" do
-      state = FactoryGirl.create(:state, code: "TX")
-      leader1 = FactoryGirl.create(:leader, person_id: "1234567", state: state)
-      leader2 = KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX"})
-      leader2.publish!
-      leader2.id.should == leader1.id
-    end
+    context "with an existing leader" do
+      it "finds existing leader if created" do
+        leader1 = FactoryGirl.create(
+          :leader, person_id: "1234567", state: texas)
+        leader2 = KnowWhoImporter.new.create_or_update(
+          { pid: "1234567", statecode: "TX"})
+        leader2.publish!
 
-    it "attaches new leader to state" do
-      state = FactoryGirl.create(:state, code: "TX")
-      leader = KnowWhoImporter.create_or_update(know_who_data)
-      leader.state.code.should == "TX"
+        leader2.id.should == leader1.id
+      end
+
+      it "sets member_status to 'current'" do
+        leader = FactoryGirl.create(
+          :leader, person_id: "1234567", state: texas)
+        leader = KnowWhoImporter.new.create_or_update(know_who_data)
+
+        leader.member_status.should == "current"
+      end
     end
 
     it "sets attributes of new leader and publishes" do
-      FactoryGirl.create(:state, code: "TX")
-      KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX", marital: "single"})
+      KnowWhoImporter.new.create_or_update(
+        { pid: "1234567", statecode: "TX", marital: "single"})
+
       Leader.find_by_person_id("1234567").marital_status.should == "single"
     end
 
     it "sets born_on of new leader and publishes" do
-      FactoryGirl.create(:state, code: "TX")
-      KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX", birthyear: 1972, birthmonth: 9, birthdate: 15})
+      KnowWhoImporter.new.create_or_update({ pid: "1234567", statecode: "TX", birthyear: 1972, birthmonth: 9, birthdate: 15})
       Leader.find_by_person_id("1234567").born_on.should == Date.new(1972, 9, 15)
     end
 
     it "skips born_on of new leader if no month or day" do
-      FactoryGirl.create(:state, code: "TX")
-      KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX", birthyear: 1972})
+      KnowWhoImporter.new.create_or_update({ pid: "1234567", statecode: "TX", birthyear: 1972})
       Leader.find_by_person_id("1234567").born_on.should == nil
     end
 
     it "updates attributes of existing leader but does not publish" do
-      FactoryGirl.create(:state, code: "TX")
-      KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX", marital: "single"})
-      KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX", marital: "married"})
+      KnowWhoImporter.new.create_or_update({ pid: "1234567", statecode: "TX", marital: "single"})
+      KnowWhoImporter.new.create_or_update({ pid: "1234567", statecode: "TX", marital: "married"})
       Leader.find_by_person_id("1234567").marital_status.should == "single"
     end
 
-    it "updates attributes of existing leader but does not publish" do
-      FactoryGirl.create(:state, code: "TX")
-      KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX", marital: "single"})
-      KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX", marital: "married"})
+    xit "updates attributes of existing leader but does not publish" do
+      KnowWhoImporter.new.create_or_update({ pid: "1234567", statecode: "TX", marital: "single"})
+      KnowWhoImporter.new.create_or_update({ pid: "1234567", statecode: "TX", marital: "married"})
       Leader.find_by_person_id("1234567").publish!
       Leader.find_by_person_id("1234567").marital_status.should == "married"
     end
 
     it "does not throw error if leader has same state" do
-      state = FactoryGirl.create(:state, code: "TX")
-      leader = FactoryGirl.create(:leader, person_id: "1234567", state: state)
+      leader = FactoryGirl.create(:leader, person_id: "1234567", state: texas)
       lambda do
-        KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "TX"})
+        KnowWhoImporter.new.create_or_update({ pid: "1234567", statecode: "TX"})
       end.should_not raise_error
-    end
-    
-    it "throws error if leader has new state" do
-      state = FactoryGirl.create(:state, code: "TX")
-      FactoryGirl.create(:state, code: "CA")
-      leader = FactoryGirl.create(:leader, state: state, person_id: "1234567")
-      lambda do
-        KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "CA"})
-      end.should raise_error(RuntimeError, "Know Who data tried to change leader state")
-    end
-
-    it "throws error if state not found" do
-      state = FactoryGirl.create(:state, code: "TX")
-      leader = FactoryGirl.create(:leader, state: state, person_id: "1234567")
-      lambda do
-        KnowWhoImporter.create_or_update({ pid: "1234567", statecode: "CA"})
-      end.should raise_error(RuntimeError, "Know Who data state not found")
     end
   end
 end
