@@ -31,6 +31,8 @@ group :test, :development do
   gem 'database_cleaner', "~> 0.7.2"
   gem 'factory_girl_rails', "~> 3.0"
   gem 'delorean'
+  gem 'spring'
+  gem 'spring-commands-rspec'
 end
 
 # To use ActiveModel has_secure_password
