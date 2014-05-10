@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120928163932) do
+ActiveRecord::Schema.define(:version => 20140510002356) do
 
   create_table "cms_attachment_versions", :force => true do |t|
     t.integer  "original_record_id"
@@ -639,6 +639,7 @@ ActiveRecord::Schema.define(:version => 20120928163932) do
     t.boolean  "archived",          :default => false
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
+    t.string   "member_status"
   end
 
   add_index "leaders", ["person_id"], :name => "index_leaders_on_person_id", :unique => true
