@@ -1,8 +1,4 @@
 LeadersApi::Application.routes.draw do
-  namespace :cms  do content_blocks :leaders end
-
-  namespace :cms  do content_blocks :states end
-
   namespace :v1, defaults: {format: 'json'} do
     resources :leaders
     resources :states do
@@ -74,5 +70,4 @@ LeadersApi::Application.routes.draw do
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id))(.:format)'
 
-  mount_browsercms
 end

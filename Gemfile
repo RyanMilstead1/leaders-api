@@ -46,8 +46,3 @@ gem 'unicorn'
 
 # Deploy with Capistrano
 gem 'capistrano'
-
-# To use debugger
-# gem 'debugger'
-
-gem "browsercms", "3.5.4"

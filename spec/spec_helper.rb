@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'spork'
-#uncomment the following line to use spork with the debugger
-#require 'spork/ext/ruby-debug'
+
+require 'know_who'
 
 Spork.prefork do
   # This file is copied to spec/ when you run 'rails generate rspec:install'

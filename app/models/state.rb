@@ -1,6 +1,4 @@
 class State < ActiveRecord::Base
-  acts_as_content_block
-
   has_many :leaders, order: :last_name
 
   def self.us_codes

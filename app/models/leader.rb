@@ -1,6 +1,4 @@
 class Leader < ActiveRecord::Base
-  acts_as_content_block
-  # attr_accessible :title, :body
   belongs_to :state
 
   attr_protected :person_id
@@ -15,29 +13,20 @@ class Leader < ActiveRecord::Base
   before_create :generate_slug
 
   def self.create_or_update(data)
-    leader = Leader.find_by_person_id(data[:pid])
-    state = State.find_by_code(data[:statecode])
-    raise "Know Who data state not found" unless state
-    if leader
-      verify_same_state(leader, state)
-      update_attributes_from_know_who(leader, data)
-      leader.member_status = 'current'
-      # leader.save!
-      leader.publish!
-    else
-      leader = state.leaders.new
-      update_attributes_from_know_who(leader, data)
-      # FIXME: This should happen before_create, but browsercms is overriding
-      leader.generate_slug
-      leader.member_status = 'current'
-      leader.publish!
-    end
-    leader
+    leader = Leader.find_or_create_by_person_id(data[:pid])
+    update_attributes_from_know_who(leader, data)
+    ensure_correct_state(leader, data)
+    leader.tap { |l| l.save! }
   end
 
-  def self.verify_same_state(leader, state)
-    unless leader.state and leader.state.code == state.code
-      raise "Know Who data tried to change leader state"
+  def self.ensure_correct_state(leader, data)
+    state = State.find_by_code!(data[:statecode])
+    if leader.state
+      unless leader.state.code == state.code
+        raise "Know Who data tried to change leader state"
+      end
+    else
+      leader.state = state
     end
   end
 

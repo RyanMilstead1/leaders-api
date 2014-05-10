@@ -1,0 +1,60 @@
+"STATEID","STATENAME","STATEPOSTCODE","STATECODE","COUNTRYID","LUTORDER"
+16,"Alabama","AL",1,223,1
+17,"Alaska","AK",2,223,2
+18,"Arizona","AZ",4,223,3
+19,"Arkansas","AR",5,223,4
+20,"California","CA",6,223,5
+21,"Colorado","CO",8,223,6
+22,"Connecticut","CT",9,223,7
+23,"Delaware","DE",10,223,8
+24,"District of Columbia","DC",11,223,9
+1,"Florida","FL",12,223,10
+2,"Georgia","GA",13,223,11
+3,"Hawaii","HI",15,223,12
+4,"Idaho","ID",16,223,13
+5,"Illinois","IL",17,223,14
+6,"Indiana","IN",18,223,15
+7,"Iowa","IA",19,223,16
+8,"Kansas","KS",20,223,17
+9,"Kentucky","KY",21,223,18
+10,"Louisiana","LA",22,223,19
+11,"Maine","ME",23,223,20
+12,"Maryland","MD",24,223,21
+13,"Massachusetts","MA",25,223,22
+14,"Michigan","MI",26,223,23
+15,"Minnesota","MN",27,223,24
+25,"Mississippi","MS",28,223,25
+26,"Missouri","MO",29,223,26
+27,"Montana","MT",30,223,27
+28,"Nebraska","NE",31,223,28
+29,"Nevada","NV",32,223,29
+30,"New Hampshire","NH",33,223,30
+31,"New Jersey","NJ",34,223,31
+32,"New Mexico","NM",35,223,32
+33,"New York","NY",36,223,33
+34,"North Carolina","NC",37,223,34
+35,"North Dakota","ND",38,223,35
+36,"Ohio","OH",39,223,36
+37,"Oklahoma","OK",40,223,37
+38,"Oregon","OR",41,223,38
+39,"Pennsylvania","PA",42,223,39
+40,"Rhode Island","RI",44,223,40
+41,"South Carolina","SC",45,223,41
+42,"South Dakota","SD",46,223,42
+43,"Tennessee","TN",47,223,43
+44,"Texas","TX",48,223,44
+45,"Utah","UT",49,223,45
+46,"Vermont","VT",50,223,46
+47,"Virginia","VA",51,223,47
+48,"Washington","WA",53,223,48
+49,"West Virginia","WV",54,223,49
+50,"Wisconsin","WI",55,223,50
+51,"Wyoming","WY",56,223,51
+52,"American Samoa","AS",60,223,52
+57,"Federated States of Micronesia","FM",64,223,53
+53,"Guam","GU",66,223,54
+58,"Marshall Islands","MH",68,223,55
+56,"Mariana Islands","MP",69,223,56
+59,"Palau","PW",70,223,57
+54,"Puerto Rico","PR",72,223,58
+55,"Virgin Islands","VI",78,223,59

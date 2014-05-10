@@ -30,7 +30,7 @@ describe Leader do
 
   context "#generate_slug" do
     it "assigns slug from prefix_name" do
-      leader.publish!
+      leader.save!
       leader.slug.should == "us-sen-sue-landske"
     end
 
@@ -76,7 +76,7 @@ describe Leader do
       leader = FactoryGirl.create(:leader, state: texas, person_id: "1234567")
       lambda do
         Leader.create_or_update({ pid: "1234567", statecode: "CA"})
-      end.should raise_error(RuntimeError, "Know Who data state not found")
+      end.should raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end

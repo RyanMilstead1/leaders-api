@@ -1,30 +1,30 @@
 require 'csv'
 
 namespace :know_who do
-  task :download_latest_data do
-    `mkdir -p know_who/raw`
-    `cd know_who/raw && wget #{ENV['KNOW_WHO_FTP_URL']}/*`
-    #`cd know_who/raw && unzip \*.zip`
-  end
+  # task :download_latest_data do
+  #   `mkdir -p know_who/raw`
+  #   `cd know_who/raw && wget #{ENV['KNOW_WHO_FTP_URL']}/*`
+  #   #`cd know_who/raw && unzip \*.zip`
+  # end
 
-  task :import => :environment do
-    Rake::Task["know_who:setup_files"].execute
-    Rake::Task["know_who:import_states"].execute
-    Rake::Task["know_who:import_leaders"].execute
-    #Rake::Task["know_who:import_bio_records"].execute
-  end
+  # task :import => :environment do
+  #   Rake::Task["know_who:setup_files"].execute
+  #   Rake::Task["know_who:import_states"].execute
+  #   Rake::Task["know_who:import_leaders"].execute
+  #   #Rake::Task["know_who:import_bio_records"].execute
+  # end
 
-  task :delete_states => :environment do
-    puts "removing old state data"
-    count = State.delete_all
-    puts "removed #{count} state records"
-  end
+  # task :delete_states => :environment do
+  #   puts "removing old state data"
+  #   count = State.delete_all
+  #   puts "removed #{count} state records"
+  # end
 
-  task :delete_leaders => :environment do
-    puts "removing old leader data"
-    count = Leader.delete_all
-    puts "removed #{count} leader records"
-  end
+  # task :delete_leaders => :environment do
+  #   puts "removing old leader data"
+  #   count = Leader.delete_all
+  #   puts "removed #{count} leader records"
+  # end
 
   task :import_states => :environment do
     puts "importing new state records"
@@ -72,25 +72,6 @@ namespace :know_who do
       leader = KnowWhoImporter.create_or_update(member)
       puts "Imported #{leader.prefix_name}"
     end
-  end
-
-
-  task :import_bios => :environment do
-    begin
-      CSV.foreach("know_who/Biographies.utf8.csv", headers: true, header_converters: :symbol) do |bio|
-        #member = Member.first(conditions: { person_id: bio[:pid] })
-        #member.update_attributes(
-        #  biography: bio[:document],
-        #  biography_updated_on: bio[:biodate],
-        #)
-        print "."
-        #puts "Updated bio for #{member.name}"
-        #sleep 3
-        @bio = bio
-      end
-    rescue
-      puts "Error on bio for #{@bio[:pid]}"
-    end 
   end
 
   task :setup_files => :environment do
