@@ -1,2 +1,2 @@
-PSP_BASE_URI = "http://publicservantsprayer.org"
-API_BASE_URI = "http://localhost:8081"
+PSP_BASE_URI = "/"
+API_BASE_URI = "/"

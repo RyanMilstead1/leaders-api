@@ -10,7 +10,7 @@ class Leader < ActiveRecord::Base
   scope :us_house,      where(legislator_type: "FL", chamber: "H").order(:last_name)
   scope :us_senate,     where(legislator_type: "FL", chamber: "S").order(:last_name)
 
-  before_create :generate_slug
+  before_save :generate_slug
 
   def self.create_or_update(data)
     leader = Leader.find_or_create_by_person_id(data[:pid])
@@ -39,7 +39,7 @@ class Leader < ActiveRecord::Base
   end
 
   def prefix_name
-    if legislator_type == "FL"
+    if legislator_type == "FL" || legislator_type == "FLE"
      "US #{prefix} #{name}"
     else
      "#{prefix} #{name}"
@@ -63,6 +63,7 @@ class Leader < ActiveRecord::Base
   end
 
   def generate_slug
+    return unless slug.blank?
     tmp_slug = prefix_name.parameterize
     count = Leader.where("slug = ? or slug LIKE ?", tmp_slug, "#{tmp_slug}--%").count
     if count < 1

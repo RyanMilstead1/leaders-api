@@ -36,55 +36,17 @@ describe KnowWho::LeaderImporter do
       leader.should be_an_instance_of(Leader)
     end
 
-    context "with a new leader" do
-      it "creates new leader if not yet created" do
-        leader1 = FactoryGirl.create(:leader, state: texas, person_id: "00001")
-        leader2 = importer.import_leader(know_who_data)
-
-        leader2.id.should_not == leader1.id
-      end
-
-      it "attaches new leader to state" do
-        leader.state.code.should == "TX"
-      end
-
-      it "sets member_status to 'current'" do
-        leader.member_status.should == "current"
-      end
+    it "sets member_status to 'current'" do
+      leader.member_status.should == "current"
     end
 
-    context "with an existing leader" do
-      it "finds existing leader if created" do
-        leader1 = FactoryGirl.create(
-          :leader, person_id: "1234567", state: texas)
-        leader2 = importer.import_leader(
-          { pid: "1234567", statecode: "TX"})
-        leader2.save!
+    it "sets member_status to 'current'" do
+      leader = FactoryGirl.create(
+        :leader, person_id: "1234567", state: texas)
+      importer.begin_import
+      leader = importer.import_leader(know_who_data)
 
-        leader2.id.should == leader1.id
-      end
-
-      it "sets member_status to 'current'" do
-        leader = FactoryGirl.create(
-          :leader, person_id: "1234567", state: texas)
-        leader = importer.import_leader(know_who_data)
-
-        leader.member_status.should == "current"
-      end
-    end
-
-    it "skips born_on of new leader if no month or day" do
-      importer.import_leader(
-        { pid: "1234567", statecode: "TX", birthyear: 1972})
-
-      Leader.find_by_person_id("1234567").born_on.should == nil
-    end
-
-    it "does not throw error if leader has same state" do
-      leader = FactoryGirl.create(:leader, person_id: "1234567", state: texas)
-      lambda do
-        importer.import_leader({ pid: "1234567", statecode: "TX"})
-      end.should_not raise_error
+      leader.member_status.should == "current"
     end
   end
 end

@@ -1,9 +1,14 @@
 require 'csv'
+require 'know_who'
 
 namespace :know_who do
   task :download_latest_data do
     `mkdir -p know_who/raw`
     `cd know_who/raw && wget #{ENV['KNOW_WHO_FTP_URL']}/*`
+  end
+
+  task :import_states => :environment do
+    KnowWho::StateImporter.new.import('spec/fixtures/states.csv')
   end
 
   task :import_month => :environment do

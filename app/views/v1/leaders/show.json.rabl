@@ -1,5 +1,5 @@
 object @leader
-attributes :slug, 
+attributes :slug,
            :name,
            :title,
            :href,

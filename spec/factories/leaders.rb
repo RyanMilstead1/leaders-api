@@ -22,7 +22,7 @@ FactoryGirl.define do
     person_id { generate(:person_id) }
     photo_path 'Images\Photos\SL\IN\S'
     photo_file 'Landske_Dorothy_194409.jpg'
-    
+
     factory :senator do
       legislator_type "SL"
       chamber "S"
@@ -36,7 +36,7 @@ FactoryGirl.define do
       title "Representative"
       prefix "Rep."
     end
-    
+
     factory :us_senator do
       legislator_type "FL"
       chamber "S"
