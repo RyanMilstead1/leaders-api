@@ -1,13 +1,4 @@
 LeadersApi::Application.configure do
-  # Uncomment and set this to match your production URL. Used for emailing links to the CMS. (default: localhost:3000)
-  # config.cms.site_domain = "www.example.com"
-
-  # TODO: Setup subdomain for cms because this disables page caching
-  config.cms.use_single_domain = true
-
-  # Configure your mail server's address below
-  #config.action_mailer.smtp_settings = {:address => 'mail.yourmailserver.com', :domain => config.cms.site_domain}
-
   # Settings specified here will take precedence over those in config/application.rb
 
   # Code is not reloaded between requests
