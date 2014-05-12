@@ -3,12 +3,19 @@ class Leader < ActiveRecord::Base
 
   attr_protected :person_id
 
-  scope :state,         where(legislator_type: "SL").order(:last_name)
-  scope :state_house,   where(legislator_type: "SL", chamber: "H").order(:last_name)
-  scope :state_senate,  where(legislator_type: "SL", chamber: "S").order(:last_name)
-  scope :us,            where(legislator_type: "FL").order(:last_name)
-  scope :us_house,      where(legislator_type: "FL", chamber: "H").order(:last_name)
-  scope :us_senate,     where(legislator_type: "FL", chamber: "S").order(:last_name)
+  scope :current,       where(member_status: 'current')
+  scope :state,         where(member_status: 'current',
+                              legislator_type: "SL").order(:last_name)
+  scope :state_house,   where(member_status: 'current',
+                              legislator_type: "SL", chamber: "H").order(:last_name)
+  scope :state_senate,  where(member_status: 'current',
+                              legislator_type: "SL", chamber: "S").order(:last_name)
+  scope :us,            where(member_status: 'current',
+                              legislator_type: "FL").order(:last_name)
+  scope :us_house,      where(member_status: 'current',
+                              legislator_type: "FL", chamber: "H").order(:last_name)
+  scope :us_senate,     where(member_status: 'current',
+                              legislator_type: "FL", chamber: "S").order(:last_name)
 
   before_save :generate_slug
 

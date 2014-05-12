@@ -7,7 +7,7 @@ module V1
     end
 
     def index
-      @leaders = @state.leaders
+      @leaders = @state.leaders.current
     end
 
     def show
@@ -15,7 +15,7 @@ module V1
       @state = @leader.state
     end
 
-    def us_senate 
+    def us_senate
       @leaders =  @state.leaders.us_senate
       render 'index'
     end
@@ -25,7 +25,7 @@ module V1
       render 'index'
     end
 
-    def state_senate 
+    def state_senate
       @leaders = @state.leaders.state_senate
       render 'index'
     end

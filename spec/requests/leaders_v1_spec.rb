@@ -7,6 +7,20 @@ describe 'Leader api v1' do
     FactoryGirl.create(:us_representative, state: @indiana, nick_name: "Jill", last_name: "Jones")
     FactoryGirl.create(:senator, state: @indiana)
     FactoryGirl.create(:representative, state: @indiana)
+    FactoryGirl.create(:representative, state: @indiana)
+    FactoryGirl.create(:representative, state: @indiana, member_status: 'former')
+  end
+
+  it 'displays current members' do
+    visit "/v1/states/in/leaders"
+
+    page.should have_content('"member_status":"current"')
+  end
+
+  it 'does not display former members' do
+    visit "/v1/states/in/leaders"
+
+    page.should_not have_content('"member_status":"former"')
   end
 
   it 'displays json data for all leaders in state' do

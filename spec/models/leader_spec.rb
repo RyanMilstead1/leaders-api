@@ -85,7 +85,6 @@ describe Leader do
       end
 
       it "creates slug from prefix name" do
-        puts pre: leader.prefix_name
         leader.slug.should == "us-sen-sue-landske"
       end
     end

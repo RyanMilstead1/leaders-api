@@ -16,4 +16,5 @@ attributes :slug,
            :email,
            :twitter,
            :facebook,
-           :webform
+           :webform,
+           :member_status
