@@ -56,7 +56,7 @@ class Leader < ActiveRecord::Base
   def photo_src
     return "http://placehold.it/109x148" if photo_path.blank? or photo_file.blank?
     p = photo_path.split("\\")
-    "#{PSP_BASE_URI}/#{p[1].downcase}/#{p[2]}/#{p[3]}/#{p[4]}/#{photo_file}"
+    "/#{p[1].downcase}/#{p[2]}/#{p[3]}/#{p[4]}/#{photo_file}"
   end
 
   def href
